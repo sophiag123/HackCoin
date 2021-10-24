@@ -20,7 +20,7 @@ class Transaction {
 
         const hashTx = this.calculateHash();
         const sig = signingKey.sign(hashTx, 'base64');
-        this.signature = sign.toDER('hex');
+        this.signature = sig.toDER('hex');
     }
 
     isValid() {
@@ -78,7 +78,7 @@ class Blockchain {
     }
 
     createGenesisBlock() {
-        return new Block("01/01/2021", "Genesis block", "0");
+        return new Block(Date.parse("01/01/2021"), [], "0");
     }
 
     getLatestBlock() {
@@ -89,7 +89,7 @@ class Blockchain {
         const rewardTX = new Transaction(null, miningRewardAddress, this.miningReward);
         this.pendingTransactions.push(rewardTX);
 
-        let block = new Block(Date.now(), this.pendingTransactions);
+        let block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
         block.mineBlock(this.difficulty);
 
         console.log('Block successfully mined!');
